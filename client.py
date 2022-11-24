@@ -1,5 +1,6 @@
 import asyncio
-
+import nest_asyncio
+nest_asyncio.apply()
 
 HOST = 'localhost'
 PORT = 9095
@@ -7,12 +8,17 @@ PORT = 9095
 
 async def tcp_echo_client(host, port):
     reader, writer = await asyncio.open_connection(host, port)
-    message = 'Hello, world'
+    
+    while True:
+        message = input()
 
-    writer.write(message.encode())
-    await writer.drain()
+        writer.write(message.encode())
+        await writer.drain()
 
-    data = await reader.read(100)
+        data = await reader.read(100)
+        print(data.decode())
+        if message == 'exit':
+            break
     writer.close()
     # await writer.wait_closed()
 

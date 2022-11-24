@@ -1,14 +1,20 @@
 import asyncio
+import nest_asyncio
+nest_asyncio.apply()
 
 HOST = 'localhost'
 PORT = 9095
 
 
 async def handle_echo(reader, writer):
-    data = await reader.read(100)
-    message = data.decode()
 
-    writer.write(data)
+    while True:
+        data = await reader.read(100)
+        message = data.decode()
+        if message == 'exit':
+            break
+        writer.write(data)
+
     await writer.drain()
 
     writer.close()
